@@ -4,7 +4,7 @@ import { ComponentProps } from "react" // ComponentProps para extender las propi
 import { twMerge } from "tailwind-merge" // twMerge para combinar clases de Tailwind evitando duplicaciones
 
 // Definición de estilos condicionales para el botón usando cva
-const buttonStyles = cva (["transition-colors"], //Clase base aplicada a todos los notones para transición de colores
+export const buttonStyles = cva (["transition-colors"], //Clase base aplicada a todos los notones para transición de colores
     {
         variants: { //Variantes de estilos para el botón
             variant: {
