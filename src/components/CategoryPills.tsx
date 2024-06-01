@@ -22,23 +22,26 @@ export function CategoryPills ({categories, selectedCategory, onSelect}:Category
 
     //Hook useEffect para observar cambios en el tamaño del contenedor
 useEffect(() => {
+    // Verifica si containerRef.current es nulo. Si es nulo, se sale del efecto temprano.
     if (containerRef.current == null) return
-
+    // Crea una instancia de ResizeObserver que observa cambios en el tamaño del contenedor.
     const observer = new ResizeObserver(entries => {
         const container = entries[0]?.target
-        if (container == null) return
-
+        if (container == null) return // Verifica si el contenedor es nulo. Si es nulo, se sale temprano.
+        // Actualiza la visibilidad del lado izquierdo del contenedor. 
+        // Si translate es mayor que 0, hay contenido desplazado hacia la izquierda y por lo tanto se muestra
         setIsLeftVisible(translate>0)
         setIsRightVisible(translate < (container.scrollWidth - container.clientWidth))
     })
 
     observer.observe(containerRef.current) //Aquí se comienza a observar el contenedor
-
+    // Retorna una función de limpieza que se ejecuta cuando el componente se desmonta o antes de que el efecto se vuelva a ejecutar.
+    // Esta función desconecta el observador para evitar fugas de memoria
     return () => {
-        observer.disconnect()//Aquí se termina de observar el contenedor	
+        observer.disconnect()	
     }
 
-}, [translate]) //Se ejecuta cada vez que cambia el valor de `translate`
+}, [categories, translate]) //Se ejecuta cada vez que cambia el valor de `translate`
 
     return (
     <div 
@@ -90,10 +93,9 @@ useEffect(() => {
             className="h-full aspect-square w-auto p-1.5"
             onClick={() => {
                 setTranslate (translate =>{
-                    console.log(containerRef, translate)
-                if (containerRef.current == null) { //Si containerRef es nulo, retorna el valor actal de translate sin cambios
-                    return translate
-                }
+                    if (containerRef.current == null) { //Si containerRef es nulo, retorna el valor actal de translate sin cambios
+                        return translate
+                    }
                 const newTranslate = translate + TRANSLATE_AMOUNT //Calcula el nuevo valor de translate sumando una cantidad definida(TRANSLATE_AMOUNT) de pixels
                 const edge = containerRef.current.scrollWidth //Obtiene el ancho total del contenido del contenedor
                 const width = containerRef.current.clientWidth //Obtiene el ancho visible del contenido del contenedor
